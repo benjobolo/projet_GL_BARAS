@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire Utilisateur</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 500px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+<h1 th:text="${user.id != null} ? 'Modifier un utilisateur' : 'Créer un utilisateur'"></h1>
+
+<form th:action="${user.id != null} ? @{/users/update/{id}(id=${user.id})} : @{/users}"
+      th:object="${user}"
+      method="post">
+
+    <label>Nom *</label>
+    <input type="text" th:field="*{name}" required>
+
+    <label>Email *</label>
+    <input type="email" th:field="*{email}" required th:readonly="${user.id != null}">
+
+    <label>Localisation *</label>
+    <input type="text" th:field="*{location}" required>
+
+    <label>Bio</label>
+    <textarea th:field="*{bio}" rows="4"></textarea>
+
+    <label>URL Photo de profil</label>
+    <input type="text" th:field="*{photoUrl}">
+
+    <label>Numéro de téléphone</label>
+    <input type="text" th:field="*{phoneNumber}">
+
+    <button type="submit">💾 Enregistrer</button>
+</form>
+
+<br>
+<a href="/users">← Retour à la liste</a>
+</body>
+</html>

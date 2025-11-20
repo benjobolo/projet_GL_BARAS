@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<nav th:fragment="navbar">
+    <div class="navbar">
+        <a href="/" class="logo">🏠 ExchangeApp</a>
+        <div class="nav-links">
+            <a href="/users">👥 Utilisateurs</a>
+            <a href="/announcements">📢 Annonces</a>
+            <a href="/exchange-requests">🤝 Demandes</a>
+            <a href="/messages">💬 Messages</a>
+            <a href="/reviews">⭐ Avis</a>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .navbar {
+        background-color: #4CAF50;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .navbar .logo {
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    .navbar .logo:hover {
+        opacity: 0.8;
+    }
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        padding: 8px 15px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    .nav-links a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+</style>
+</body>
+</html>

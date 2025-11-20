@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire Annonce</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 600px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        .checkbox-container { margin-top: 10px; }
+    </style>
+</head>
+<body>
+<h1 th:text="${announcement.id != null} ? 'Modifier une annonce' : 'Créer une annonce'"></h1>
+
+<form th:action="${announcement.id != null} ? @{/announcements/update/{id}(id=${announcement.id})} : @{/announcements}"
+      th:object="${announcement}"
+      method="post">
+
+    <label>Titre *</label>
+    <input type="text" th:field="*{title}" required>
+
+    <label>Description *</label>
+    <textarea th:field="*{description}" rows="5" required></textarea>
+
+    <label>Type *</label>
+    <select th:field="*{type}" required>
+        <option value="">-- Choisir un type --</option>
+        <option th:each="type : ${types}" th:value="${type}" th:text="${type}"></option>
+    </select>
+
+    <label>Catégorie</label>
+    <input type="text" th:field="*{category}" placeholder="ex: Bricolage, Jardinage, Cuisine...">
+
+    <label>URL de l'image</label>
+    <input type="text" th:field="*{imageUrl}">
+
+    <label>Commentaire d'échange</label>
+    <textarea th:field="*{exchangeComment}" rows="3" placeholder="Ce que vous souhaitez en échange..."></textarea>
+
+    <div class="checkbox-container">
+        <label>
+            <input type="checkbox" th:field="*{available}"> Disponible
+        </label>
+    </div>
+
+    <label>Propriétaire *</label>
+    <select name="ownerId" required>
+        <option value="">-- Choisir un propriétaire --</option>
+        <option th:each="user : ${users}"
+                th:value="${user.id}"
+                th:text="${user.name}"
+                th:selected="${announcement.owner != null && announcement.owner.id == user.id}"></option>
+    </select>
+
+    <button type="submit">💾 Enregistrer</button>
+</form>
+
+<br>
+<a href="/announcements">← Retour à la liste</a>
+</body>
+</html>

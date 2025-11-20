@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Avis utilisateur</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .user-header { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .average-rating { font-size: 24px; color: #FFD700; }
+        .review-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .stars { color: #FFD700; font-size: 18px; }
+        .reviewer-name { font-weight: bold; color: #555; }
+        .review-date { color: #888; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="user-header">
+    <h1>⭐ Avis pour <span th:text="${user.name}"></span></h1>
+    <div class="average-rating">
+        Note moyenne : <span th:text="${#numbers.formatDecimal(averageRating, 1, 2)}"></span>/5.0
+        <span class="stars" th:text="${#strings.repeat('★', #numbers.formatInteger(averageRating, 0))}"></span>
+    </div>
+    <p>Email : <span th:text="${user.email}"></span></p>
+    <p>Localisation : <span th:text="${user.location}"></span></p>
+</div>
+
+<h2>Tous les avis reçus</h2>
+
+<div th:if="${#lists.isEmpty(reviews)}">
+    <p>Aucun avis pour le moment.</p>
+</div>
+
+<div th:each="review : ${reviews}" class="review-card">
+    <div class="review-header">
+        <div>
+            <span class="reviewer-name" th:text="${review.reviewer.name}"></span>
+            <span class="stars" th:text="${#strings.repeat('★', review.rating) + #strings.repeat('☆', 5 - review.rating)}"></span>
+        </div>
+        <span class="review-date" th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy')}"></span>
+    </div>
+    <div>
+        <strong>Échange :</strong> <span th:text="${review.exchangeRequest.announcement.title}"></span>
+    </div>
+    <div th:if="${review.comment}" style="margin-top: 10px;">
+        <em th:text="${review.comment}"></em>
+    </div>
+</div>
+
+<br>
+<a href="/reviews">← Retour aux avis</a> |
+<a href="/users">← Retour aux utilisateurs</a>
+</body>
+</html>

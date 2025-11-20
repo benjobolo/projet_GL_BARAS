@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f5f5f5; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        .btn { padding: 8px 16px; text-decoration: none; color: white; border-radius: 4px; display: inline-block; margin: 2px; }
+        .btn-create { background-color: #4CAF50; margin-bottom: 20px; }
+        .btn-read { background-color: #2196F3; }
+        .btn-delete { background-color: #f44336; }
+        .unread { background-color: #fff3cd; font-weight: bold; }
+        .read { background-color: #d4edda; }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <h1>💬 Messages</h1>
+
+    <a href="/messages/new" class="btn btn-create">➕ Envoyer un nouveau message</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Expéditeur</th>
+            <th>Destinataire</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="message : ${messages}"
+            th:class="${message.read} ? 'read' : 'unread'">
+            <td th:text="${message.id}"></td>
+            <td th:text="${message.sender.name}"></td>
+            <td th:text="${message.receiver.name}"></td>
+            <td th:text="${#strings.abbreviate(message.content, 60)}"></td>
+            <td th:text="${#temporals.format(message.sentAt, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${message.read} ? '✓ Lu' : '✉ Non lu'"></td>
+            <td>
+                <a th:if="${!message.read}"
+                   th:href="@{/messages/mark-read/{id}(id=${message.id})}"
+                   class="btn btn-read">👁 Marquer comme lu</a>
+                <a th:href="@{/messages/delete/{id}(id=${message.id})}" class="btn btn-delete"
+                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?')">🗑️ Supprimer</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

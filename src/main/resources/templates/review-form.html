@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire d'Avis</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 600px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        .error { color: red; margin-top: 10px; }
+        .rating-info { color: #666; font-size: 14px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+<h1 th:text="${review.id != null} ? 'Modifier un avis' : 'Laisser un avis'"></h1>
+
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<form th:action="${review.id != null} ? @{/reviews/update/{id}(id=${review.id})} : @{/reviews}"
+      th:object="${review}"
+      method="post">
+
+    <label>Échange concerné *</label>
+    <select name="exchangeRequestId" required>
+        <option value="">-- Choisir un échange --</option>
+        <option th:each="request : ${exchangeRequests}"
+                th:value="${request.id}"
+                th:text="'#' + ${request.id} + ' - ' + ${request.announcement.title}"
+                th:selected="${review.exchangeRequest != null && review.exchangeRequest.id == request.id}"></option>
+    </select>
+
+    <label>Évaluateur *</label>
+    <select name="reviewerId" required>
+        <option value="">-- Choisir un évaluateur --</option>
+        <option th:each="user : ${users}"
+                th:value="${user.id}"
+                th:text="${user.name}"
+                th:selected="${review.reviewer != null && review.reviewer.id == user.id}"></option>
+    </select>
+
+    <label>Utilisateur évalué *</label>
+    <select name="reviewedUserId" required>
+        <option value="">-- Choisir l'utilisateur à évaluer --</option>
+        <option th:each="user : ${users}"
+                th:value="${user.id}"
+                th:text="${user.name}"
+                th:selected="${review.reviewedUser != null && review.reviewedUser.id == user.id}"></option>
+    </select>
+
+    <label>Note *</label>
+    <select th:field="*{rating}" required>
+        <option value="">-- Choisir une note --</option>
+        <option value="1">1 ★ - Très mauvais</option>
+        <option value="2">2 ★★ - Mauvais</option>
+        <option value="3">3 ★★★ - Moyen</option>
+        <option value="4">4 ★★★★ - Bon</option>
+        <option value="5">5 ★★★★★ - Excellent</option>
+    </select>
+    <div class="rating-info">La note doit être comprise entre 1 et 5 étoiles</div>
+
+    <label>Commentaire</label>
+    <textarea th:field="*{comment}" rows="6" placeholder="Partagez votre expérience..."></textarea>
+
+    <button type="submit">💾 Enregistrer l'avis</button>
+</form>
+
+<br>
+<a href="/reviews">← Retour à la liste</a>
+</body>
+</html>

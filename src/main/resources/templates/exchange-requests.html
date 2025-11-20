@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Demandes d'Échange</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f5f5f5; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        .btn { padding: 8px 16px; text-decoration: none; color: white; border-radius: 4px; display: inline-block; margin: 2px; }
+        .btn-create { background-color: #4CAF50; margin-bottom: 20px; }
+        .btn-edit { background-color: #2196F3; }
+        .btn-delete { background-color: #f44336; }
+        .btn-accept { background-color: #4CAF50; }
+        .btn-refuse { background-color: #f44336; }
+        .badge { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .badge-pending { background-color: #FF9800; color: white; }
+        .badge-accepted { background-color: #4CAF50; color: white; }
+        .badge-refused { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <h1>🤝 Demandes d'Échange</h1>
+
+    <a href="/exchange-requests/new" class="btn btn-create">➕ Créer une nouvelle demande</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Annonce</th>
+            <th>Propriétaire</th>
+            <th>Demandeur</th>
+            <th>Proposition</th>
+            <th>Date proposée</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="request : ${requests}">
+            <td th:text="${request.id}"></td>
+            <td th:text="${request.announcement.title}"></td>
+            <td th:text="${request.announcement.owner.name}"></td>
+            <td th:text="${request.requester.name}"></td>
+            <td th:text="${#strings.abbreviate(request.offerDescription, 40)}"></td>
+            <td th:text="${request.proposedDate}"></td>
+            <td>
+                        <span th:class="'badge badge-' + ${#strings.toLowerCase(request.status)}"
+                              th:text="${request.status}"></span>
+            </td>
+            <td>
+                <a th:if="${request.status.name() == 'PENDING'}"
+                   th:href="@{/exchange-requests/accept/{id}(id=${request.id})}"
+                   class="btn btn-accept">✓ Accepter</a>
+                <a th:if="${request.status.name() == 'PENDING'}"
+                   th:href="@{/exchange-requests/refuse/{id}(id=${request.id})}"
+                   class="btn btn-refuse">✗ Refuser</a>
+                <a th:href="@{/exchange-requests/edit/{id}(id=${request.id})}" class="btn btn-edit">✏️ Modifier</a>
+                <a th:href="@{/exchange-requests/delete/{id}(id=${request.id})}" class="btn btn-delete"
+                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')">🗑️ Supprimer</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

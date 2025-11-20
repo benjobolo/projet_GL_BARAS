@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Avis et Notes</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f5f5f5; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        .btn { padding: 8px 16px; text-decoration: none; color: white; border-radius: 4px; display: inline-block; margin: 2px; }
+        .btn-create { background-color: #4CAF50; margin-bottom: 20px; }
+        .btn-edit { background-color: #2196F3; }
+        .btn-delete { background-color: #f44336; }
+        .stars { color: #FFD700; font-size: 18px; }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <h1>⭐ Avis et Notes</h1>
+
+    <a href="/reviews/new" class="btn btn-create">➕ Laisser un nouvel avis</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Évaluateur</th>
+            <th>Utilisateur évalué</th>
+            <th>Échange</th>
+            <th>Note</th>
+            <th>Commentaire</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="review : ${reviews}">
+            <td th:text="${review.id}"></td>
+            <td th:text="${review.reviewer.name}"></td>
+            <td>
+                <a th:href="@{/reviews/user/{id}(id=${review.reviewedUser.id})}"
+                   th:text="${review.reviewedUser.name}"></a>
+            </td>
+            <td th:text="'#' + ${review.exchangeRequest.id} + ' - ' + ${review.exchangeRequest.announcement.title}"></td>
+            <td>
+                <span class="stars" th:text="${#strings.repeat('★', review.rating) + #strings.repeat('☆', 5 - review.rating)}"></span>
+                <span th:text="${review.rating} + '/5'"></span>
+            </td>
+            <td th:text="${#strings.abbreviate(review.comment, 50)}"></td>
+            <td th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy')}"></td>
+            <td>
+                <a th:href="@{/reviews/edit/{id}(id=${review.id})}" class="btn btn-edit">✏️ Modifier</a>
+                <a th:href="@{/reviews/delete/{id}(id=${review.id})}" class="btn btn-delete"
+                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?')">🗑️ Supprimer</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

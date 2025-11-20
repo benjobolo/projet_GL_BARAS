@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire de Demande d'Échange</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 600px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+<h1 th:text="${request.id != null} ? 'Modifier une demande' : 'Créer une demande d\'échange'"></h1>
+
+<form th:action="${request.id != null} ? @{/exchange-requests/update/{id}(id=${request.id})} : @{/exchange-requests}"
+      th:object="${request}"
+      method="post">
+
+    <label>Annonce concernée *</label>
+    <select name="announcementId" required>
+        <option value="">-- Choisir une annonce --</option>
+        <option th:each="announcement : ${announcements}"
+                th:value="${announcement.id}"
+                th:text="${announcement.title + ' (' + announcement.owner.name + ')'}"
+                th:selected="${request.announcement != null && request.announcement.id == announcement.id}"></option>
+    </select>
+
+    <label>Demandeur *</label>
+    <select name="requesterId" required>
+        <option value="">-- Choisir un demandeur --</option>
+        <option th:each="user : ${users}"
+                th:value="${user.id}"
+                th:text="${user.name}"
+                th:selected="${request.requester != null && request.requester.id == user.id}"></option>
+    </select>
+
+    <label>Ce que vous proposez en échange *</label>
+    <textarea th:field="*{offerDescription}" rows="5" required placeholder="Décrivez ce que vous proposez..."></textarea>
+
+    <label>Date/Horaire proposé</label>
+    <input type="text" th:field="*{proposedDate}" placeholder="ex: Samedi 25 novembre à 14h">
+
+    <button type="submit">💾 Enregistrer</button>
+</form>
+
+<br>
+<a href="/exchange-requests">← Retour à la liste</a>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .conversation { max-width: 800px; margin: 0 auto; }
+        .message-bubble { margin: 10px 0; padding: 10px 15px; border-radius: 10px; max-width: 70%; }
+        .sent { background-color: #dcf8c6; margin-left: auto; text-align: right; }
+        .received { background-color: #f1f1f1; margin-right: auto; }
+        .sender-name { font-weight: bold; font-size: 12px; color: #555; }
+        .timestamp { font-size: 11px; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+<div class="conversation">
+    <h1>💬 Conversation entre <span th:text="${user1.name}"></span> et <span th:text="${user2.name}"></span></h1>
+
+    <div th:each="message : ${messages}">
+        <div th:class="'message-bubble ' + (${message.sender.id == user1.id} ? 'sent' : 'received')">
+            <div class="sender-name" th:text="${message.sender.name}"></div>
+            <div th:text="${message.content}"></div>
+            <div class="timestamp" th:text="${#temporals.format(message.sentAt, 'dd/MM/yyyy HH:mm')}"></div>
+        </div>
+    </div>
+
+    <br>
+    <a href="/messages">← Retour aux messages</a>
+</div>
+</body>
+</html>
